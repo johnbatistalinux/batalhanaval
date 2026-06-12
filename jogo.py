@@ -300,6 +300,13 @@ def encontrar_multiplicado_por_10_e_trocar_por_fogo(valor_a_ser_procurado,mapa_a
 
 
 def main ():
+        print("")
+        print("Bem vindo ao jogo Batalha Naval.")
+  
+        print("")
+        print("")      
+        
+        
         print("🌊 = voce acertou o oceano")
         print("")
         print("💥 = voce acertou alguma enbarcacao")
@@ -308,7 +315,7 @@ def main ():
         print("")
 
         
-        input("aperte Enter, se voce entendeu.")
+        input("Aperte Enter, se voce entendeu: ")
         limpar_tela()
 
         
