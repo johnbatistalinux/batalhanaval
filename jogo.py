@@ -19,26 +19,15 @@ for i in range(10):
 
 mapa_jogador=[linha[:] for linha in mapa_inicial]        ## copia_lista = [lista_original[:]]  -- muito util pois assim voce consegue criar uma copia de uma lista desejada
 
-mapa_feedback=[linha[:] for linha in mapa_inicial]
+mapa_feedback_robo=[linha[:] for linha in mapa_inicial]
+
+mapa_feedback_jogador=[linha[:] for linha in mapa_inicial]
 
 mapa_barcos_robo=[linha[:] for linha in mapa_inicial] ## mapa que contem todos os barcos do robo
 
 mapa_baixo_robo=[linha[:] for linha in mapa_baixo]
 
 mapa_baixo_jogador=[linha[:] for linha in mapa_baixo]
-
-
-
-## coordenadas barcos jogador e robo
-
-indice_coordenadas_barcos_robo={1:[],2:[],3:[],4:[],5:[]}
-
-indice_coordenadas_barcos_jogador={1:[],2:[],3:[],4:[],5:[]}
-
-
-
-
-
 
 ## funcoes uteis e autoexplicativas
 
@@ -85,7 +74,7 @@ def usuario_escolhe_coordenada():
         return X-1, Y-1
 
 def robo_escolhe():
-        X=random.randint(1,10)
+        X=random.randint(0,10)
         return X
 
 def limpar_tela():
@@ -110,7 +99,7 @@ def colocar_barcos_grandes(direcao,barco,Y,X,mapa):
                         if direcao=="H":
                                 verificacao=0
                                 while verificacao==0:
-                                        print(f'navio atual: {barco+1} blocos, da esquerda para direita (horizontal) ou de cima para baixo (vertical) ')
+                                        print(f'navio atual: {'[🚢]'+'🚢'*(barco)} Da esquerda para direita (horizontal) ou de cima para baixo (vertical) ')
                                         print("")
                                         verificacao=1
                                         for i in range(barco):
@@ -130,8 +119,7 @@ def colocar_barcos_grandes(direcao,barco,Y,X,mapa):
                                         modificar_mapa(Y,X+i,'🚢',mapa)
                                         modificar_mapa(Y,X+i,barco,mapa_baixo_jogador)
                                 
-                                indice_coordenadas_barcos_jogador[barco].append(Y)
-                                indice_coordenadas_barcos_jogador[barco].append(X)
+
                                 
                                 return mapa
                         else:                                                        
@@ -152,9 +140,7 @@ def colocar_barcos_grandes(direcao,barco,Y,X,mapa):
                                 for i in range(barco):
                                         modificar_mapa(Y+i,X,'🚢',mapa)
                                         modificar_mapa(Y+i,X,barco,mapa_baixo_jogador)
-                                
-                                indice_coordenadas_barcos_jogador[barco].append(Y)
-                                indice_coordenadas_barcos_jogador[barco].append(X)
+
 
                                 return mapa
                 except IndexError:
@@ -167,6 +153,8 @@ def colocar_barcos_grandes(direcao,barco,Y,X,mapa):
                         direcao = escolher_direcao_barco()
 
 def colocar_os_barcos_do_jogador():
+        print("Posicione seus NAVIOS!")
+        print("")
         
         for i in range(1,6,1):
 
@@ -186,9 +174,13 @@ def animacao_ataque_jogador(Y,X,mapa,direcao,inicio):    ## direcao = [ -1 vai d
                 modificar_mapa(i,Y,'💣',mapa_copia)
                 mostrar_mapa_V2(mapa_copia)
                 print("")
-                mostrar_mapa_V2(mapa_jogador)
+                mostrar_mapa_V2(mapa_feedback_jogador)
                 time.sleep(0.1)
                 limpar_tela()
+        mostrar_mapa_V2(mapa_copia)
+        print("")
+        mostrar_mapa_V2(mapa_feedback_jogador)
+        time.sleep(0.5)
 def colocar_barcos_grandes_robo_horizontal(Ycoordenada,Xcoordenada):
        
         
@@ -308,6 +300,18 @@ def encontrar_multiplicado_por_10_e_trocar_por_fogo(valor_a_ser_procurado,mapa_a
 
 
 def main ():
+        print("🌊 = voce acertou o oceano")
+        print("")
+        print("💥 = voce acertou alguma enbarcacao")
+        print("")
+        print("🔥 = voce destruiu a enbarcacao por completo")
+        print("")
+
+        
+        input("aperte Enter, se voce entendeu.")
+        limpar_tela()
+
+        
         global barcos_robo_restantes
         global barcos_jogador_restantes
         
@@ -320,38 +324,45 @@ def main ():
         
         while barcos_robo_restantes > 0 and barcos_jogador_restantes > 0:
                 limpar_tela()
-                mostrar_mapa_V2(mapa_feedback)
+                mostrar_mapa_V2(mapa_feedback_robo)
                 print("")
-                mostrar_mapa_V2(mapa_jogador)
+                mostrar_mapa_V2(mapa_feedback_jogador)
+
+                
+
+                ## usuario ataca
                 
                 Xusuario,Yusuario = usuario_escolhe_coordenada()
                 
-                animacao_ataque_jogador(Xusuario,Yusuario,mapa_feedback,-1,9)
+                animacao_ataque_jogador(Xusuario,Yusuario,mapa_feedback_robo,-1,9)
                 
                 valor_original = mapa_baixo_robo[Yusuario][Xusuario]
                 
-                modificar_mapa(Yusuario,Xusuario,emoji_acerto_erro(Xusuario,Yusuario,mapa_baixo_robo),mapa_feedback)
+                modificar_mapa(Yusuario,Xusuario,emoji_acerto_erro(Xusuario,Yusuario,mapa_baixo_robo),mapa_feedback_robo)
                 
                 multiplicar_por_10_paraa_achar_depois_facil(Xusuario,Yusuario,mapa_baixo_robo)
                 
                 if valor_original != 0 and retornar_quantidade_barcos_restantes_mapa(valor_original, mapa_baixo_robo) == 0:
                         barcos_robo_restantes -= 1
-                        encontrar_multiplicado_por_10_e_trocar_por_fogo(valor_original, mapa_baixo_robo, mapa_feedback)
+                        encontrar_multiplicado_por_10_e_trocar_por_fogo(valor_original, mapa_baixo_robo, mapa_feedback_robo)
                 
                 if barcos_robo_restantes == 0:
                         break
                 
+                ## robo ataca
+
                 X_robo = robo_escolhe() - 1
                 Y_robo = robo_escolhe() - 1
                 
-                print("robo ataca")
+                print("")
+                print("Robo Ataca!")
                 print("")
                 time.sleep(2)
                 for i in range(0, Y_robo + 1):
                         limpar_tela()
-                        mapa_temp = [linha[:] for linha in mapa_jogador]
+                        mapa_temp = [linha[:] for linha in mapa_feedback_jogador]
                         modificar_mapa(i, X_robo, '💣', mapa_temp)
-                        mostrar_mapa_V2(mapa_feedback)
+                        mostrar_mapa_V2(mapa_feedback_robo)
                         print("")
                         mostrar_mapa_V2(mapa_temp)
                         
@@ -360,14 +371,21 @@ def main ():
                 
                 valor_original_jogador = mapa_baixo_jogador[Y_robo][X_robo]
                 
-                modificar_mapa(Y_robo, X_robo, emoji_acerto_erro(X_robo, Y_robo, mapa_baixo_jogador), mapa_jogador)
+                modificar_mapa(Y_robo, X_robo, emoji_acerto_erro(X_robo, Y_robo, mapa_baixo_jogador), mapa_feedback_jogador)
                 multiplicar_por_10_paraa_achar_depois_facil(X_robo, Y_robo, mapa_baixo_jogador)
                 
                 if valor_original_jogador != 0 and retornar_quantidade_barcos_restantes_mapa(valor_original_jogador, mapa_baixo_jogador) == 0:
                         barcos_jogador_restantes -= 1
-                        encontrar_multiplicado_por_10_e_trocar_por_fogo(valor_original_jogador, mapa_baixo_jogador, mapa_jogador)
-
-
+                        encontrar_multiplicado_por_10_e_trocar_por_fogo(valor_original_jogador, mapa_baixo_jogador, mapa_feedback_jogador)
+        if barcos_robo_restantes==0 and barcos_jogador_restantes>0:
+                limpar_tela()
+                print("jogador venceu, parabens")
+                time.sleep(3)
+        else:
+                limpar_tela()
+                print("robo venceu, mas nao desista")
+                time.sleep(3)
+        print("Trabalho feito por John Batista e Mateus Costa para a disciplina de Raciocinio Algoritimico")
 
 
 
